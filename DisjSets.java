@@ -1,0 +1,93 @@
+
+
+// DisjSets class
+//
+// CONSTRUCTION: with int representing initial number of sets
+//
+// ******************PUBLIC OPERATIONS*********************
+// void union( root1, root2 ) --> Merge two sets
+// int find( x )              --> Return set containing x
+
+
+/**
+ * Disjoint set class, using union by rank and path compression.
+ * Elements in the set are numbered starting at 0.
+ */
+public class DisjSets
+{
+    /**
+     * Construct the disjoint sets object.
+     * @param numElements the initial number of disjoint sets.
+     */
+    public DisjSets( int numElements )
+    {
+        s = new int [ numElements ];
+        for( int i = 0; i < s.length; i++ )
+            s[ i ] = -1;
+    }
+
+    /**
+     * Union two disjoint sets using the height heuristic.
+     * For simplicity, we assume root1 and root2 are distinct
+     * and represent set names.
+     * @param root1 the root of set 1.
+     * @param root2 the root of set 2.
+     */
+    public void union( int root1, int root2 )
+    {
+        if( s[ root2 ] < s[ root1 ] )  // root2 is deeper
+            s[ root1 ] = root2;        // Make root2 new root
+        else
+        {
+            if( s[ root1 ] == s[ root2 ] )
+                s[ root1 ]--;          // Update height if same
+            s[ root2 ] = root1;        // Make root1 new root
+        }
+    }
+
+    /**
+     * Perform a find with path compression.
+     * Error checks omitted again for simplicity.
+     * @param x the element being searched for.
+     * @return the set containing x.
+     */
+    public int find( int x )
+    {
+        if( s[ x ] < 0 )
+            return x;
+        else
+            return  s[ x ] = find( s[ x ] );
+    }
+
+    private int [ ] s;
+    
+    /**
+     * To check whether all the elements have same root or not.
+     * @param num total number of elements in the disjoint sets.
+     * @return true if all elements in same set(have same root), false otherwise.
+     * @author yisu
+     */
+
+    public boolean check(int nums) {
+    	
+    	for (int i=1; i<nums;i++) {
+    		if (find(0)!=find(i))
+    			return false;
+    	}
+    	return true;
+    }
+
+    // Test main; all finds on same output line should be identical
+    public static void main( String [ ] args )
+    {
+        int NumElements = 12;  //number of elements 
+    
+        DisjSets ds = new DisjSets( NumElements );
+        
+        ds.union(1, 0);
+        
+       //check if all elements have same root or not
+      System.out.println("Do all the elements have same root?"+ds.check(NumElements));    
+        
+    }
+}
